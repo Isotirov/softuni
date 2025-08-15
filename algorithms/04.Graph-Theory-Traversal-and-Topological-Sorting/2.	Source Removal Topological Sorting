@@ -1,0 +1,38 @@
+from collections import deque
+
+n = int(input())
+
+graph = {}
+visited = set()
+cycle = set()
+sorted_nodes = deque()
+
+for _ in range(n):
+    data = input().split(' ->')
+    if data[1]:
+        destination = data[1].strip().split(', ')
+    else:
+        destination = []
+    graph[data[0]] = destination
+
+
+def topological_sort(node, graph, visited, cycle, sorted_nodes):
+    if node in cycle:
+        raise Exception('cycle')
+    if node in visited:
+        return
+    visited.add(node)
+    cycle.add(node)
+    for child in graph[node]:
+        topological_sort(child, graph, visited, cycle, sorted_nodes)
+    cycle.remove(node)
+    sorted_nodes.appendleft(node)
+
+
+try:
+    for node in graph:
+        topological_sort(node, graph, visited, cycle, sorted_nodes)
+    print(f'Topological sorting: {', '.join(sorted_nodes)}')
+except Exception:
+    print('Invalid topological sorting')
+
