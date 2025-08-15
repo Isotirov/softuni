@@ -1,1 +1,24 @@
+n = int(input())
 
+graph = []
+visited = [False] * n
+
+for _ in range(n):
+    graph.append(map(int, input().split()))
+
+
+def dfs(node, graph, visited, component):
+    if visited[node]:
+        return
+    visited[node] = True
+    for child in graph[node]:
+        dfs(child, graph, visited, component)
+    component.append(node)
+
+
+for node in range(n):
+    if visited[node]:
+        continue
+    component = []
+    dfs(node, graph, visited, component)
+    print(*component)
