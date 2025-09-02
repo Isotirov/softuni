@@ -1,0 +1,34 @@
+graph = {}
+visited = set()
+cycle = set()
+
+data = input()
+
+while data != 'End':
+    source, destination = data.split('-')
+    if source not in graph:
+        graph[source] = []
+    if destination not in graph:
+        graph[destination] = []
+    graph[source].append(destination)
+    data = input()
+
+
+def dfs(node, graph, visited, cycle):
+    if node in cycle:
+        raise Exception
+    if node in visited:
+        return
+    visited.add(node)
+    cycle.add(node)
+    for child in graph[node]:
+        dfs(child, graph, visited, cycle)
+    cycle.remove(node)
+
+
+try:
+    for node in graph:
+        dfs(node, graph, visited, cycle)
+    print('Acyclic: Yes')
+except Exception:
+    print('Acyclic: No')
