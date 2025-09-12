@@ -1,0 +1,31 @@
+n = int(input())
+
+graph = []
+salaries = {}
+
+for _ in range(n):
+    data = input()
+    row = []
+    for num, ch in enumerate(data):
+        if ch == 'Y':
+            row.append(num)
+    graph.append(row)
+
+
+def dfs(node, graph, salaries):
+    if node in salaries:
+        return salaries[node]
+    if len(graph[node]) == 0:
+        salaries[node] = 1
+        return 1
+    salary = 0
+    for child in graph[node]:
+        salary += dfs(child, graph, salaries)
+    salaries[node] = salary
+    return salary
+
+
+for node in range(n):
+    dfs(node, graph, salaries)
+
+print(sum(salaries.values()))
