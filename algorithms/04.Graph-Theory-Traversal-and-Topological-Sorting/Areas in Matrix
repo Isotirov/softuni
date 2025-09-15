@@ -29,6 +29,6 @@ for r in range(rows):
                 areas[sibling] = 0
             areas[sibling] += 1
 
-print(f'Areas: {len(areas)}')
+print(f'Areas: {sum(areas.values())}')
 for letter, number in sorted(areas.items()):
     print(f"Letter '{letter}' -> {number}")
