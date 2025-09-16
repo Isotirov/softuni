@@ -32,7 +32,7 @@ parent_array = [None] * (max_node + 1)
 pq = PriorityQueue()
 pq.put((0, start_node))
 
-while pq.not_empty:
+while not pq.empty():
     distance, node = pq.get()
     if node == end_node:
         break
