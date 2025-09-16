@@ -1,0 +1,55 @@
+from collections import deque
+from queue import PriorityQueue
+
+
+class Edge:
+    def __init__(self, source, destination, weight):
+        self.source = source
+        self.destination = destination
+        self.weight = weight
+
+
+edges = int(input())
+
+graph = {}
+
+for _ in range(edges):
+    source, destination, weight = [int(x) for x in input().split(', ')]
+    if source not in graph:
+        graph[source] = []
+    if destination not in graph:
+        graph[destination] = []
+    graph[source].append(Edge(source, destination, weight))
+
+start_node = int(input())
+end_node = int(input())
+
+max_node = max(graph.keys())
+
+distance_array = [float('inf')] * (max_node + 1)
+parent_array = [None] * (max_node + 1)
+
+pq = PriorityQueue()
+pq.put((0, start_node))
+
+while pq.not_empty:
+    distance, node = pq.get()
+    if node == end_node:
+        break
+    for child in graph[node]:
+        new_distance = distance + child.weight
+        if new_distance < distance_array[child.destination]:
+            distance_array[child.destination] = new_distance
+            parent_array[child.destination] = node
+            pq.put((new_distance, child.destination))
+
+if distance_array[end_node] == float('inf'):
+    print('There is no such path.')
+else:
+    path = deque()
+    node = end_node
+    while node is not None:
+        path.appendleft(node)
+        node = parent_array[node]
+    print(parent_array[end_node])
+    print(*path)
