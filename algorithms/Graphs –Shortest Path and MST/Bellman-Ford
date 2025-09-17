@@ -1,0 +1,51 @@
+from collections import deque
+
+
+class Edge:
+    def __init__(self, source, destination, weight):
+        self.source = source
+        self.destination = destination
+        self.weight = weight
+
+
+nodes = int(input())
+edges = int(input())
+
+graph = []
+
+for _ in range(edges):
+    source, destination, weight = [int(x) for x in input().split()]
+    graph.append(Edge(source, destination, weight))
+
+start_node = int(input())
+end_node = int(input())
+
+distance_array = [float('inf')] * (nodes + 1)
+distance_array[start_node] = 0
+parent_array = [None] * (nodes + 1)
+
+for _ in range(nodes - 1):
+    updated = False
+    for edge in graph:
+        if distance_array[edge.source] == float('inf'):
+            continue
+        distance = distance_array[edge.source] + edge.weight
+        if distance < distance_array[edge.destination]:
+            distance_array[edge.destination] = distance
+            parent_array[edge.destination] = edge.source
+            updated = True
+    if not updated:
+        break
+
+for edge in graph:
+    distance = distance_array[edge.source] + edge.weight
+    if distance < distance_array[edge.destination]:
+        print('Negative Cycle Detected')
+else:
+    path = deque()
+    node = end_node
+    while node is not None:
+        path.appendleft(node)
+        node = parent_array[node]
+    print(*path)
+    print(distance_array[end_node])
