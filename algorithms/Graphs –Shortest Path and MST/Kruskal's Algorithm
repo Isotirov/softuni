@@ -1,0 +1,36 @@
+class Edge:
+    def __init__(self, start, end, weight):
+        self.start = start
+        self.end = end
+        self.weight = weight
+
+
+edges = int(input())
+graph = []
+max_node = float('-inf')
+
+for edge in range(edges):
+    start, end, weight = map(int, input().split(', '))
+    graph.append(Edge(start, end, weight))
+    max_node = max(max_node, start, end)
+
+parent = [num for num in range(max_node + 1)]
+
+
+def find_node(parent, node):
+    while node != parent[node]:
+        node = parent[node]
+    return node
+
+
+forest = []
+
+for edge in sorted(graph, key=lambda x: x.weight):
+    first_node = find_node(parent, edge.start)
+    second_node = find_node(parent, edge.end)
+    if first_node != second_node:
+        parent[first_node] = second_node
+        forest.append(edge)
+
+for e in forest:
+    print(f'{e.start} - {e.end}')
