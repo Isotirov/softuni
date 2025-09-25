@@ -1,0 +1,61 @@
+from queue import PriorityQueue
+
+
+class Edge:
+    def __init__(self, first, second, weight):
+        self.first = first
+        self.second = second
+        self.weight = weight
+
+    def __gt__(self, other):
+        return self.weight > other.weight
+
+
+edges = int(input())
+graph = {}
+
+for _ in range(edges):
+    first, second, weight = [int(x) for x in input().split(', ')]
+    if first not in graph:
+        graph[first] = []
+    if second not in graph:
+        graph[second] = []
+    node = Edge(first, second, weight)
+    graph[first].append(node)
+    graph[second].append(node)
+
+forest = set()
+forest_edges = []
+
+
+def prim(node, graph, forest, forest_edges):
+    forest.add(node)
+    pq = PriorityQueue()
+    for edge in graph[node]:
+        pq.put(edge)
+
+    while not pq.empty():
+        non_tree_node = -1
+        min_node = pq.get()
+        if min_node.first in forest and not min_node.second in forest:
+            non_tree_node = min_node.second
+        elif not min_node.first in forest and min_node.second in forest:
+            non_tree_node = min_node.first
+
+        if non_tree_node == -1:
+            continue
+
+        forest.add(non_tree_node)
+        forest_edges.append(min_node)
+
+        for edge in graph[non_tree_node]:
+            pq.put(edge)
+
+
+for node in graph:
+    if node in forest:
+        continue
+    prim(node, graph, forest, forest_edges)
+
+for e in forest_edges:
+    print(f'{e.first} - {e.second}')
