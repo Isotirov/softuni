@@ -26,6 +26,8 @@ for _ in range(pairs):
     queue = deque([start_node])
     while queue:
         node = queue.popleft()
+        if node == end_node:
+            break
         for child in graph[node]:
             if visited[child]:
                 continue
