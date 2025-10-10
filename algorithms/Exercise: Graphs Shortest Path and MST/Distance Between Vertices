@@ -1,0 +1,40 @@
+from collections import deque
+
+vertices = int(input())
+pairs = int(input())
+
+graph = {}
+
+for _ in range(vertices):
+    source, destinations = input().split(':')
+    source = int(source)
+    children = []
+    if destinations:
+        for child in destinations.split():
+            children.append(int(child))
+    graph[source] = children
+
+max_node = max(graph.keys())
+
+for _ in range(pairs):
+    start_node, end_node = [int(x) for x in input().split('-')]
+
+    visited = [False] * (max_node + 1)
+    visited[start_node] = True
+    parent = [None] * (max_node + 1)
+
+    queue = deque([start_node])
+    while queue:
+        node = queue.popleft()
+        for child in graph[node]:
+            if visited[child]:
+                continue
+            visited[child] = True
+            parent[child] = node
+            queue.append(child)
+    path = deque()
+    node = end_node
+    while not node is None:
+        path.appendleft(node)
+        node = parent[node]
+    print(f'{{{start_node}, {end_node}}} -> {len(path) - 1 if len(path) > 1 else -1}')
